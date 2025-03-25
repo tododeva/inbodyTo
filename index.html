@@ -59,11 +59,11 @@
 
             // CSV 데이터에서 값 추출
             const date = new Date().toISOString().slice(2, 10).replace(/-/g, "."); // 오늘 날짜
-            const weight = firstRow[1].trim(); // 몸무게
-            const bfm = firstRow[2].trim(); // 체지방량
-            const smm = firstRow[3].trim(); // 골격근량
-            const bmi = firstRow[4].trim(); // BMI
-            const pbf = firstRow[5].trim(); // 체지방률
+            const weight = firstRow[1].trim().replace(/"/g, ""); // 몸무게
+            const bfm = firstRow[2].trim().replace(/"/g, ""); // 체지방량
+            const smm = firstRow[3].trim().replace(/"/g, ""); // 골격근량
+            const bmi = firstRow[4].trim().replace(/"/g, ""); // BMI
+            const pbf = firstRow[5].trim().replace(/"/g, ""); // 체지방률
 
             // 원하는 형식으로 변환
             const resultText = `<strong>${date} :</strong> ${weight}kg / ${pbf}% (${bfm} / ${smm}) / BMI ${bmi}`;
