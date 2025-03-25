@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CSV 데이터 변환기</title>
+
+    <!-- ✅ Bootstrap 5 CSS 추가 -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+</head>
+<body class="bg-light">
+
+<div class="container mt-5">
+    <div class="card shadow p-4">
+        <h2 class="mb-3 text-center">📂 CSV 데이터 변환기</h2>
+
+        <!-- 파일 업로드 -->
+        <div class="mb-3">
+            <label for="csvFileInput" class="form-label">CSV 파일을 선택하세요:</label>
+            <input type="file" class="form-control" id="csvFileInput" accept=".csv">
+        </div>
+
+        <!-- 변환 버튼 -->
+        <button class="btn btn-primary w-100" onclick="processCSV()">변환하기</button>
+
+        <!-- 결과 출력 -->
+        <div class="mt-4 p-3 bg-white rounded shadow-sm">
+            <h5>📊 변환 결과:</h5>
+            <p id="result" class="text-muted">여기에 결과가 표시됩니다.</p>
+        </div>
+    </div>
+</div>
+
+<!-- ✅ Bootstrap 5 JS 추가 -->
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+
+<script>
+    function processCSV() {
+        const fileInput = document.getElementById("csvFileInput");
+        const resultElement = document.getElementById("result");
+
+        if (!fileInput.files.length) {
+            alert("CSV 파일을 선택하세요.");
+            return;
+        }
+
+        const file = fileInput.files[0];
+        const reader = new FileReader();
+
+        reader.onload = function(event) {
+            const text = event.target.result;
+            const rows = text.split("\n"); // 줄바꿈으로 분리
+            const firstRow = rows[1].split(","); // 데이터가 두 번째 줄에 있다고 가정
+
+            if (firstRow.length < 6) {
+                resultElement.textContent = "⚠️ CSV 파일 형식이 올바르지 않습니다.";
+                return;
+            }
+
+            // CSV 데이터에서 값 추출
+            const date = new Date().toISOString().slice(2, 10).replace(/-/g, "."); // 오늘 날짜
+            const weight = firstRow[1].trim(); // 몸무게
+            const bfm = firstRow[2].trim(); // 체지방량
+            const smm = firstRow[3].trim(); // 골격근량
+            const bmi = firstRow[4].trim(); // BMI
+            const pbf = firstRow[5].trim(); // 체지방률
+
+            // 원하는 형식으로 변환
+            const resultText = `<strong>${date} :</strong> ${weight}kg / ${pbf}% (${bfm} / ${smm}) / BMI ${bmi}`;
+            resultElement.innerHTML = resultText;
+            resultElement.classList.add("text-success"); // 스타일 적용
+        };
+
+        reader.readAsText(file);
+    }
+</script>
+
+</body>
+</html>
