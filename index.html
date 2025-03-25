@@ -49,19 +49,58 @@
             <!-- 복사 버튼 -->
             <button class="btn btn-success w-100 mt-2" onclick="copyResult()">📋 복사하기</button>
         </div>
+
+        <!-- ✅ Bootstrap Alert 메시지 영역 -->
+        <div id="alertBox" class="alert mt-3 d-none" role="alert"></div>
+
     </div>
+
+    <!-- 🎨 🌟 정원장님 찬양 메시지 🌟 -->
+    <div class="container mt-5">
+        <div class="card bg-light p-4 shadow-sm">
+            <h3 class="text-center">🌟 모딜리아니 의원의 전설적인 정원장님 찬양 메시지 🌟</h3>
+            <p class="mt-3">
+                🎨 <strong>예술과 의술을 넘나드는 피부 마법사!</strong><br>
+                정원장님은 단순한 피부과 의사가 아닙니다. 피부 예술가, 모공 요정, 주름의 적, 탄력의 수호자! <br>
+                그분의 손길이 닿으면 피부가 “어머, 나 다시 태어났어?”라고 말하는 기적이 일어납니다.
+            </p>
+            <p>
+                💎 <strong>우아함과 상큼함의 완벽한 조화!</strong><br>
+                정원장님은 기품 있는 우아함과 과즙미 터지는 상콤함을 동시에 지닌 유일무이한 존재! 💖<br>
+                (하지만 진료할 땐 엄격하고 카리스마 넘치신다는 건 안 비밀...!)
+            </p>
+            <p class="text-muted">
+                🔥 <strong>전설의 기록들</strong><br>
+                “정원장님 손만 스쳐도 내 피부가 달라졌다…” – 익명의 환자 A<br>
+                “모딜리아니 의원 다녀온 후로 거울 볼 때마다 심장이 두근거린다.” – 환자 B<br>
+                “피부 좋아졌다는 소리 듣느라 요즘 너무 바쁘다.” – 환자 C
+            </p>
+        </div>
+    </div>
+
 </div>
 
-<!-- ✅ Bootstrap 5 JS 추가 -->
-<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+
 
 <script>
+    function showAlert(message, type) {
+        const alertBox = document.getElementById("alertBox");
+        alertBox.textContent = message;
+        alertBox.className = `alert alert-${type} mt-3`; // success, danger 등 적용
+        alertBox.classList.remove("d-none");
+
+        // 3초 후 자동 숨김
+        setTimeout(() => {
+            alertBox.classList.add("d-none");
+        }, 3000);
+    }
+
     function processCSV() {
         const fileInput = document.getElementById("csvFileInput");
         const resultElement = document.getElementById("result");
 
         if (!fileInput.files.length) {
-            alert("CSV 파일을 선택하세요.");
+            showAlert("⚠️ CSV 파일을 선택하세요!", "danger");
             return;
         }
 
@@ -70,11 +109,11 @@
 
         reader.onload = function(event) {
             const text = event.target.result;
-            const rows = text.split("\n"); // 줄바꿈으로 분리
-            const firstRow = rows[1].split(","); // 데이터가 두 번째 줄에 있다고 가정
+            const rows = text.split("\n");
+            const firstRow = rows[1]?.split(/,(?=(?:[^"]*"[^"]*")*[^"]*$)/);
 
-            if (firstRow.length < 6) {
-                resultElement.textContent = "⚠️ CSV 파일 형식이 올바르지 않습니다.";
+            if (!firstRow || firstRow.length < 6) {
+                showAlert("⚠️ CSV 파일 형식이 올바르지 않습니다!", "danger");
                 return;
             }
 
@@ -90,6 +129,7 @@
             const resultText = `<strong>${date} :</strong>${weight}kg/${pbf}%(${bfm}/${smm})/BMI${bmi}`;
             resultElement.innerHTML = resultText;
             resultElement.classList.add("text-success"); // 스타일 적용
+            showAlert("✅ 변환이 완료되었습니다!", "success");
         };
 
         reader.readAsText(file);
@@ -99,18 +139,25 @@
         const resultText = document.getElementById("result").textContent;
 
         if (!resultText || resultText === "여기에 결과가 표시됩니다.") {
-            alert("⚠️ 복사할 데이터가 없습니다. 변환을 먼저 실행하세요!");
+            showAlert("⚠️ 복사할 데이터가 없습니다. 변환을 먼저 실행하세요!", "danger");
             return;
         }
 
         navigator.clipboard.writeText(resultText).then(() => {
-            alert("✅ 변환된 결과가 클립보드에 복사되었습니다!");
+            showAlert("✅ 변환된 결과가 클립보드에 복사되었습니다!", "success");
         }).catch(err => {
-            alert("❌ 복사 실패! 다시 시도해주세요.");
+            showAlert("❌ 복사 실패! 다시 시도해주세요.", "danger");
             console.error("복사 오류:", err);
         });
     }
 </script>
 
+<!-- ✅ Bootstrap 5 JS 추가 -->
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+
 </body>
+<!-- ✅ 풋터 영역 -->
+<footer class="text-center mt-4 py-3 bg-dark text-white">
+    <p class="mb-0">© 2025 All rights reserved. | Created with ❤️ by <strong>이름없는 어느 개발자</strong></p>
+</footer>
 </html>
