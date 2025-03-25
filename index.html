@@ -25,7 +25,7 @@
 
         <!-- 결과 출력 -->
         <div class="mt-4 p-3 bg-white rounded shadow-sm">
-            <h5>📊 변환 결과:</h5>
+            <h5 >📊 변환 결과:</h5>
             <p id="result" class="text-muted">여기에 결과가 표시됩니다.</p>
         </div>
     </div>
@@ -66,7 +66,7 @@
             const pbf = firstRow[5].trim().replace(/"/g, ""); // 체지방률
 
             // 원하는 형식으로 변환
-            const resultText = `<strong>${date} :</strong> ${weight}kg / ${pbf}% (${bfm} / ${smm}) / BMI ${bmi}`;
+            const resultText = `<strong>${date} :</strong>${weight}kg/${pbf}%(${bfm}/${smm})/BMI${bmi}`;
             resultElement.innerHTML = resultText;
             resultElement.classList.add("text-success"); // 스타일 적용
         };
