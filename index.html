@@ -23,15 +23,40 @@
             backdrop-filter: blur(10px); /* 흐림 효과 */
             border-radius: 10px;
         }
+
+        .my-toast {
+            position: fixed;
+            top: 30px;
+            right: 30px;
+            background-color: #333;
+            color: white;
+            padding: 12px 18px;
+            border-radius: 6px;
+            font-size: 14px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            opacity: 0;
+            transform: translateX(100%); /* 오른쪽 바깥으로 이동 */
+            transition: transform 0.5s ease, opacity 0.5s ease;
+            z-index: 9999;
+            pointer-events: none;
+        }
+
+        .my-toast.show {
+            opacity: 1;
+            transform: translateX(0); /* 제자리로 슬라이드 인 */
+        }
     </style>
 </head>
 <body class="bg-light">
+
 
 <div class="container mt-5">
     <div class="card shadow p-4">
         <h1 class="mb-1 text-center">정원장 전용</h1>
         <h2 class="mb-3 text-center">📂 CSV 데이터 변환기</h2>
-
+        <p class="text-danger">변환후 자동저장 ver.03</p>
         <!-- 파일 업로드 -->
         <div class="mb-3">
             <label for="csvFileInput" class="form-label">CSV 파일을 선택하세요:</label>
@@ -39,20 +64,19 @@
         </div>
 
         <!-- 변환 버튼 -->
-        <button class="btn btn-primary w-100 mb-2" onclick="processCSV()">🔄 변환하기</button>
+        <button class="btn btn-primary w-100 mb-2" id="convertButton">🔄 변환하기</button>
 
         <!-- 결과 출력 -->
         <div class="mt-4 p-3 bg-white text-danger rounded shadow-sm">
             <h5 >📊 변환 결과:</h5>
             <p id="result" class="text-muted">여기에 결과가 표시됩니다.</p>
-
-            <!-- 복사 버튼 -->
-            <button class="btn btn-success w-100 mt-2" onclick="copyResult()">📋 복사하기</button>
         </div>
 
         <!-- ✅ Bootstrap Alert 메시지 영역 -->
-        <div id="alertBox" class="alert mt-3 d-none" role="alert"></div>
-
+        <div id="toast" class="my-toast">
+            <span id="toast-icon">✅</span>
+            <span id="toast-message">복사 완료!</span>
+        </div>
     </div>
 
     <!-- 🎨 🌟 정원장님 찬양 메시지 🌟 -->
@@ -83,24 +107,32 @@
 
 
 <script>
-    function showAlert(message, type) {
-        const alertBox = document.getElementById("alertBox");
-        alertBox.textContent = message;
-        alertBox.className = `alert alert-${type} mt-3`; // success, danger 등 적용
-        alertBox.classList.remove("d-none");
+    function showAlert({ message = "작업 완료", type = "success", color = "#4CAF50" }) {
 
+        const toast = document.getElementById("toast");
+        const icon = document.getElementById("toast-icon");
+        const text = document.getElementById("toast-message");
+        text.textContent = message;
+        toast.style.backgroundColor = color;
+        icon.textContent = type;
+
+
+        toast.classList.add("show");
+        //toast.className = `alert-${type} mt-3`; // success, danger 등 적용
         // 3초 후 자동 숨김
         setTimeout(() => {
-            alertBox.classList.add("d-none");
+            toast.classList.remove("show");
         }, 3000);
     }
+
+    document.getElementById("convertButton").addEventListener('click', processCSV);
 
     function processCSV() {
         const fileInput = document.getElementById("csvFileInput");
         const resultElement = document.getElementById("result");
 
         if (!fileInput.files.length) {
-            showAlert("⚠️ CSV 파일을 선택하세요!", "danger");
+            showAlert({ message: " CSV 파일을 선택하세요!", type: "⚠️", color: "#f44336" });
             return;
         }
 
@@ -113,7 +145,7 @@
             const firstRow = rows[1]?.split(/,(?=(?:[^"]*"[^"]*")*[^"]*$)/);
 
             if (!firstRow || firstRow.length < 6) {
-                showAlert("⚠️ CSV 파일 형식이 올바르지 않습니다!", "danger");
+                showAlert({ message: "CSV 파일 형식이 올바르지 않습니다!", type: "⚠️", color: "#f44336" });
                 return;
             }
 
@@ -129,27 +161,19 @@
             const resultText = `<strong>${date} :</strong>${weight}kg/${pbf}%(${bfm}/${smm})/BMI${bmi}`;
             resultElement.innerHTML = resultText;
             resultElement.classList.add("text-success"); // 스타일 적용
-            showAlert("✅ 변환이 완료되었습니다!", "success");
+
+            const contentsText = resultElement.textContent;
+            navigator.clipboard.writeText(contentsText).then(() => {
+                showAlert({ message: "변환후 결과가 클립보드에 복사되었습니다! (Ctrl+V) 하세요!", type: "✅", color: "#16a606" });
+            }).catch(err => {
+                showAlert({ message: "복사 실패! 다시 시도해주세요", type: "❌", color: "#f44336" });
+                console.error("복사 오류:", err);
+            });
         };
 
         reader.readAsText(file);
     }
 
-    function copyResult() {
-        const resultText = document.getElementById("result").textContent;
-
-        if (!resultText || resultText === "여기에 결과가 표시됩니다.") {
-            showAlert("⚠️ 복사할 데이터가 없습니다. 변환을 먼저 실행하세요!", "danger");
-            return;
-        }
-
-        navigator.clipboard.writeText(resultText).then(() => {
-            showAlert("✅ 변환된 결과가 클립보드에 복사되었습니다!", "success");
-        }).catch(err => {
-            showAlert("❌ 복사 실패! 다시 시도해주세요.", "danger");
-            console.error("복사 오류:", err);
-        });
-    }
 </script>
 
 <!-- ✅ Bootstrap 5 JS 추가 -->
