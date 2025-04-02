@@ -74,6 +74,12 @@
     </div>
   </div>
 
+
+  <div id="toast" class="my-toast">
+    <span id="toast-icon">✅</span>
+    <span id="toast-message">복사 완료!</span>
+  </div>
+
 </div>
   <!--<script src="js/notice.js"></script>-->
 
@@ -149,7 +155,8 @@
     // 📋 클립보드 복사
     function copyToClipboard(text) {
       navigator.clipboard.writeText(text).then(() => {
-        alert("클립보드에 복사되었습니다!");
+        //alert("클립보드에 복사되었습니다!");
+        showAlert({ message: "클립보드에 복사되었습니다! (Ctrl+V) 하세요!", type: "✅", color: "#16a606" });
       });
     }
 
@@ -186,6 +193,25 @@
         };
       };
     });
+
+
+    function showAlert({ message = "작업 완료", type = "success", color = "#4CAF50" }) {
+
+      const toast = document.getElementById("toast");
+      const icon = document.getElementById("toast-icon");
+      const text = document.getElementById("toast-message");
+      text.textContent = message;
+      toast.style.backgroundColor = color;
+      icon.textContent = type;
+
+
+      toast.classList.add("show");
+      //toast.className = `alert-${type} mt-3`; // success, danger 등 적용
+      // 3초 후 자동 숨김
+      setTimeout(() => {
+        toast.classList.remove("show");
+      }, 3000);
+    }
 
   </script>
 
