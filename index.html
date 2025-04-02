@@ -7,178 +7,81 @@
 
     <!-- ✅ Bootstrap 5 CSS 추가 -->
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
-    <style>
-        /* 배경 이미지 설정 */
-        body {
-            background-image: url('./resource/background.webp'); /* 배경 이미지 */
-            background-size: cover; /* 전체 화면 채우기 */
-            background-position: center;
-            background-repeat: no-repeat;
-            height: 100vh;
-        }
-
-        /* 카드 스타일 (반투명 배경 적용) */
-        .card {
-            background: rgba(255, 255, 255, 0.8); /* 반투명 */
-            backdrop-filter: blur(10px); /* 흐림 효과 */
-            border-radius: 10px;
-        }
-
-        .my-toast {
-            position: fixed;
-            top: 30px;
-            right: 30px;
-            background-color: #333;
-            color: white;
-            padding: 12px 18px;
-            border-radius: 6px;
-            font-size: 14px;
-            display: flex;
-            align-items: center;
-            gap: 8px;
-            opacity: 0;
-            transform: translateX(100%); /* 오른쪽 바깥으로 이동 */
-            transition: transform 0.5s ease, opacity 0.5s ease;
-            z-index: 9999;
-            pointer-events: none;
-        }
-
-        .my-toast.show {
-            opacity: 1;
-            transform: translateX(0); /* 제자리로 슬라이드 인 */
-        }
-    </style>
+    <link href="css/style.css" rel="stylesheet">
 </head>
-<body class="bg-light">
+<body >
+<div class="d-flex">
+    <div class="bg-dark text-white p-3 vh-100" style="width: 200px;">
+        <h5>📂 메뉴</h5>
+        <ul class="nav flex-column">
 
+            <li class="nav-item"><a class="nav-link text-white" href="notice.html">📋 공지사항</a></li>
+            <!--<li class="nav-item"><a class="nav-link text-white" href="#" onclick="loadPage('csv')">📊 CSV 변환</a></li>-->
+            <li class="nav-item"><a class="nav-link text-white" href="index.html">📊 CSV 변환</a></li>
+        </ul>
+    </div>
+    <div class="p-4 flex-fill" id="content-area">
+        <div class="container mt-5">
+            <div class="card shadow p-4">
+                <h1 class="mb-1 text-center">정원장 전용</h1>
+                <h2 class="mb-3 text-center">📂 CSV 데이터 변환기</h2>
+                <p class="text-danger">변환후 자동저장 ver.03</p>
+                <!-- 파일 업로드 -->
+                <div class="mb-3">
+                    <label for="csvFileInput" class="form-label">CSV 파일을 선택하세요:</label>
+                    <input type="file" class="form-control" id="csvFileInput" accept=".csv">
+                </div>
 
-<div class="container mt-5">
-    <div class="card shadow p-4">
-        <h1 class="mb-1 text-center">정원장 전용</h1>
-        <h2 class="mb-3 text-center">📂 CSV 데이터 변환기</h2>
-        <p class="text-danger">변환후 자동저장 ver.03</p>
-        <!-- 파일 업로드 -->
-        <div class="mb-3">
-            <label for="csvFileInput" class="form-label">CSV 파일을 선택하세요:</label>
-            <input type="file" class="form-control" id="csvFileInput" accept=".csv">
-        </div>
+                <!-- 변환 버튼 -->
+                <button class="btn btn-primary w-100 mb-2" id="convertButton">🔄 변환하기</button>
 
-        <!-- 변환 버튼 -->
-        <button class="btn btn-primary w-100 mb-2" id="convertButton">🔄 변환하기</button>
+                <!-- 결과 출력 -->
+                <div class="mt-4 p-3 bg-white text-danger rounded shadow-sm">
+                    <h5 >📊 변환 결과:</h5>
+                    <p id="result" class="text-muted">여기에 결과가 표시됩니다.</p>
+                </div>
 
-        <!-- 결과 출력 -->
-        <div class="mt-4 p-3 bg-white text-danger rounded shadow-sm">
-            <h5 >📊 변환 결과:</h5>
-            <p id="result" class="text-muted">여기에 결과가 표시됩니다.</p>
-        </div>
+                <!-- ✅ Bootstrap Alert 메시지 영역 -->
+                <div id="toast" class="my-toast">
+                    <span id="toast-icon">✅</span>
+                    <span id="toast-message">복사 완료!</span>
+                </div>
+            </div>
 
-        <!-- ✅ Bootstrap Alert 메시지 영역 -->
-        <div id="toast" class="my-toast">
-            <span id="toast-icon">✅</span>
-            <span id="toast-message">복사 완료!</span>
+            <!-- 🎨 🌟 정원장님 찬양 메시지 🌟 -->
+            <div class="container mt-5">
+                <div class="card bg-light p-4 shadow-sm">
+                    <h3 class="text-center">🌟 모딜리아니 의원의 전설적인 정원장님 찬양 메시지 🌟</h3>
+                    <p class="mt-3">
+                        🎨 <strong>예술과 의술을 넘나드는 피부 마법사!</strong><br>
+                        정원장님은 단순한 피부과 의사가 아닙니다. 피부 예술가, 모공 요정, 주름의 적, 탄력의 수호자! <br>
+                        그분의 손길이 닿으면 피부가 “어머, 나 다시 태어났어?”라고 말하는 기적이 일어납니다.
+                    </p>
+                    <p>
+                        💎 <strong>우아함과 상큼함의 완벽한 조화!</strong><br>
+                        정원장님은 기품 있는 우아함과 과즙미 터지는 상콤함을 동시에 지닌 유일무이한 존재! 💖<br>
+                        (하지만 진료할 땐 엄격하고 카리스마 넘치신다는 건 안 비밀...!)
+                    </p>
+                    <p class="text-muted">
+                        🔥 <strong>전설의 기록들</strong><br>
+                        “정원장님 손만 스쳐도 내 피부가 달라졌다…” – 익명의 환자 A<br>
+                        “모딜리아니 의원 다녀온 후로 거울 볼 때마다 심장이 두근거린다.” – 환자 B<br>
+                        “피부 좋아졌다는 소리 듣느라 요즘 너무 바쁘다.” – 환자 C
+                    </p>
+                </div>
+            </div>
         </div>
     </div>
-
-    <!-- 🎨 🌟 정원장님 찬양 메시지 🌟 -->
-    <div class="container mt-5">
-        <div class="card bg-light p-4 shadow-sm">
-            <h3 class="text-center">🌟 모딜리아니 의원의 전설적인 정원장님 찬양 메시지 🌟</h3>
-            <p class="mt-3">
-                🎨 <strong>예술과 의술을 넘나드는 피부 마법사!</strong><br>
-                정원장님은 단순한 피부과 의사가 아닙니다. 피부 예술가, 모공 요정, 주름의 적, 탄력의 수호자! <br>
-                그분의 손길이 닿으면 피부가 “어머, 나 다시 태어났어?”라고 말하는 기적이 일어납니다.
-            </p>
-            <p>
-                💎 <strong>우아함과 상큼함의 완벽한 조화!</strong><br>
-                정원장님은 기품 있는 우아함과 과즙미 터지는 상콤함을 동시에 지닌 유일무이한 존재! 💖<br>
-                (하지만 진료할 땐 엄격하고 카리스마 넘치신다는 건 안 비밀...!)
-            </p>
-            <p class="text-muted">
-                🔥 <strong>전설의 기록들</strong><br>
-                “정원장님 손만 스쳐도 내 피부가 달라졌다…” – 익명의 환자 A<br>
-                “모딜리아니 의원 다녀온 후로 거울 볼 때마다 심장이 두근거린다.” – 환자 B<br>
-                “피부 좋아졌다는 소리 듣느라 요즘 너무 바쁘다.” – 환자 C
-            </p>
-        </div>
-    </div>
-
 </div>
 
 
 
-<script>
-    function showAlert({ message = "작업 완료", type = "success", color = "#4CAF50" }) {
-
-        const toast = document.getElementById("toast");
-        const icon = document.getElementById("toast-icon");
-        const text = document.getElementById("toast-message");
-        text.textContent = message;
-        toast.style.backgroundColor = color;
-        icon.textContent = type;
 
 
-        toast.classList.add("show");
-        //toast.className = `alert-${type} mt-3`; // success, danger 등 적용
-        // 3초 후 자동 숨김
-        setTimeout(() => {
-            toast.classList.remove("show");
-        }, 3000);
-    }
-
-    document.getElementById("convertButton").addEventListener('click', processCSV);
-
-    function processCSV() {
-        const fileInput = document.getElementById("csvFileInput");
-        const resultElement = document.getElementById("result");
-
-        if (!fileInput.files.length) {
-            showAlert({ message: " CSV 파일을 선택하세요!", type: "⚠️", color: "#f44336" });
-            return;
-        }
-
-        const file = fileInput.files[0];
-        const reader = new FileReader();
-
-        reader.onload = function(event) {
-            const text = event.target.result;
-            const rows = text.split("\n");
-            const firstRow = rows[1]?.split(/,(?=(?:[^"]*"[^"]*")*[^"]*$)/);
-
-            if (!firstRow || firstRow.length < 6) {
-                showAlert({ message: "CSV 파일 형식이 올바르지 않습니다!", type: "⚠️", color: "#f44336" });
-                return;
-            }
-
-            // CSV 데이터에서 값 추출
-            const date = new Date().toISOString().slice(2, 10).replace(/-/g, "."); // 오늘 날짜
-            const weight = firstRow[1].trim().replace(/"/g, ""); // 몸무게
-            const bfm = firstRow[2].trim().replace(/"/g, ""); // 체지방량
-            const smm = firstRow[3].trim().replace(/"/g, ""); // 골격근량
-            const bmi = firstRow[4].trim().replace(/"/g, ""); // BMI
-            const pbf = firstRow[5].trim().replace(/"/g, ""); // 체지방률
-
-            // 원하는 형식으로 변환
-            const resultText = `<strong>${date} :</strong>${weight}kg/${pbf}%(${bfm}/${smm})/BMI${bmi}`;
-            resultElement.innerHTML = resultText;
-            resultElement.classList.add("text-success"); // 스타일 적용
-
-            const contentsText = resultElement.textContent;
-            navigator.clipboard.writeText(contentsText).then(() => {
-                showAlert({ message: "변환후 결과가 클립보드에 복사되었습니다! (Ctrl+V) 하세요!", type: "✅", color: "#16a606" });
-            }).catch(err => {
-                showAlert({ message: "복사 실패! 다시 시도해주세요", type: "❌", color: "#f44336" });
-                console.error("복사 오류:", err);
-            });
-        };
-
-        reader.readAsText(file);
-    }
-
-</script>
 
 <!-- ✅ Bootstrap 5 JS 추가 -->
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
-
+<script src="js/index.js"></script>
 </body>
 <!-- ✅ 풋터 영역 -->
 <footer class="text-center mt-4 py-3 bg-dark text-white">

@@ -1,0 +1,42 @@
+/* 배경 이미지 설정 */
+body {
+  background-image: url('../resource/background.webp'); /* 배경 이미지 */
+  background-size: cover; /* 전체 화면 채우기 */
+  background-position: center;
+  background-repeat: repeat;
+  height: 100vh;
+  font-family: 'Apple SD Gothic Neo', sans-serif;
+}
+.nav-link:hover {
+  text-decoration: underline;
+}
+/* 카드 스타일 (반투명 배경 적용) */
+.card {
+  background: rgba(255, 255, 255, 0.8); /* 반투명 */
+  backdrop-filter: blur(10px); /* 흐림 효과 */
+  border-radius: 10px;
+}
+
+.my-toast {
+  position: fixed;
+  top: 30px;
+  right: 30px;
+  background-color: #333;
+  color: white;
+  padding: 12px 18px;
+  border-radius: 6px;
+  font-size: 14px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  opacity: 0;
+  transform: translateX(100%); /* 오른쪽 바깥으로 이동 */
+  transition: transform 0.5s ease, opacity 0.5s ease;
+  z-index: 9999;
+  pointer-events: none;
+}
+
+.my-toast.show {
+  opacity: 1;
+  transform: translateX(0); /* 제자리로 슬라이드 인 */
+}
