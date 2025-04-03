@@ -45,7 +45,9 @@ function processCSV() {
     const today = new Date();
     const options = { timeZone: 'Asia/Seoul', year: '2-digit', month: '2-digit', day: '2-digit' };
     const formatter = new Intl.DateTimeFormat('ko-KR', options);
-    const date = formatter.format(today).replace(/-/g, '.');
+    console.log(formatter.format(today));
+    const date = formatter.format(today).replace(/-/g, '.').replace(/\s/g, "").slice(0, -1);;
+
     console.log(date);
     const weight = firstRow[1].trim().replace(/"/g, ""); // 몸무게
     const bfm = firstRow[2].trim().replace(/"/g, ""); // 체지방량
