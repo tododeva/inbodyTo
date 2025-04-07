@@ -9,18 +9,42 @@
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
     <link href="css/style.css" rel="stylesheet">
 </head>
-<body >
-<div class="d-flex">
-    <div class="bg-dark text-white p-3 vh-100" style="width: 200px;">
+<body id="mainBody">
+
+    <!--<div class="bg-dark text-white p-3 vh-100" style="width: 200px;">
         <h5>📂 메뉴</h5>
         <ul class="nav flex-column">
 
             <li class="nav-item"><a class="nav-link text-white" href="notice.html">📋 공지사항</a></li>
-            <!--<li class="nav-item"><a class="nav-link text-white" href="#" onclick="loadPage('csv')">📊 CSV 변환</a></li>-->
+            &lt;!&ndash;<li class="nav-item"><a class="nav-link text-white" href="#" onclick="loadPage('csv')">📊 CSV 변환</a></li>&ndash;&gt;
             <li class="nav-item"><a class="nav-link text-white" href="index.html">📊 CSV 변환</a></li>
         </ul>
-    </div>
-    <div class="p-4 flex-fill" id="content-area">
+    </div>-->
+    <!-- ✅ 상단 메뉴바 시작 -->
+    <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+        <div class="container-fluid">
+            <a class="navbar-brand" href="#">📂 메뉴</a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarMenu"
+                    aria-controls="navbarMenu" aria-expanded="false" aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+
+            <div class="collapse navbar-collapse" id="navbarMenu">
+                <ul class="navbar-nav ms-auto mb-2 mb-lg-0">
+                    <li class="nav-item">
+                        <a class="nav-link" href="notice.html">📋 공지사항</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="index.html">📊 CSV 변환</a>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+
+
+
+
         <div class="container mt-5">
             <div class="card shadow p-4">
                 <h1 class="mb-1 text-center">정원장 전용</h1>
@@ -49,30 +73,30 @@
             </div>
 
             <!-- 🎨 🌟 정원장님 찬양 메시지 🌟 -->
-            <div class="container mt-5">
-                <div class="card bg-light p-4 shadow-sm">
-                    <h3 class="text-center">🌟 모딜리아니 의원의 전설적인 정원장님 찬양 메시지 🌟</h3>
-                    <p class="mt-3">
-                        🎨 <strong>예술과 의술을 넘나드는 피부 마법사!</strong><br>
-                        정원장님은 단순한 피부과 의사가 아닙니다. 피부 예술가, 모공 요정, 주름의 적, 탄력의 수호자! <br>
-                        그분의 손길이 닿으면 피부가 “어머, 나 다시 태어났어?”라고 말하는 기적이 일어납니다.
-                    </p>
-                    <p>
-                        💎 <strong>우아함과 상큼함의 완벽한 조화!</strong><br>
-                        정원장님은 기품 있는 우아함과 과즙미 터지는 상콤함을 동시에 지닌 유일무이한 존재! 💖<br>
-                        (하지만 진료할 땐 엄격하고 카리스마 넘치신다는 건 안 비밀...!)
-                    </p>
-                    <p class="text-muted">
-                        🔥 <strong>전설의 기록들</strong><br>
-                        “정원장님 손만 스쳐도 내 피부가 달라졌다…” – 익명의 환자 A<br>
-                        “모딜리아니 의원 다녀온 후로 거울 볼 때마다 심장이 두근거린다.” – 환자 B<br>
-                        “피부 좋아졌다는 소리 듣느라 요즘 너무 바쁘다.” – 환자 C
-                    </p>
-                </div>
+
+            <div class="card shadow p-4 mb-10" style="margin-top: inherit;">
+                <h3 class="text-center">🌟 모딜리아니 의원의 전설적인 정원장님 찬양 메시지 🌟</h3>
+                <p class="mt-3">
+                    🎨 <strong>예술과 의술을 넘나드는 피부 마법사!</strong><br>
+                    정원장님은 단순한 피부과 의사가 아닙니다. 피부 예술가, 모공 요정, 주름의 적, 탄력의 수호자! <br>
+                    그분의 손길이 닿으면 피부가 “어머, 나 다시 태어났어?”라고 말하는 기적이 일어납니다.
+                </p>
+                <p>
+                    💎 <strong>우아함과 상큼함의 완벽한 조화!</strong><br>
+                    정원장님은 기품 있는 우아함과 과즙미 터지는 상콤함을 동시에 지닌 유일무이한 존재! 💖<br>
+                    (하지만 진료할 땐 엄격하고 카리스마 넘치신다는 건 안 비밀...!)
+                </p>
+                <p class="text-muted">
+                    🔥 <strong>전설의 기록들</strong><br>
+                    “정원장님 손만 스쳐도 내 피부가 달라졌다…” – 익명의 환자 A<br>
+                    “모딜리아니 의원 다녀온 후로 거울 볼 때마다 심장이 두근거린다.” – 환자 B<br>
+                    “피부 좋아졌다는 소리 듣느라 요즘 너무 바쁘다.” – 환자 C
+                </p>
             </div>
+
         </div>
-    </div>
-</div>
+
+
 
 
 
@@ -82,6 +106,27 @@
 <!-- ✅ Bootstrap 5 JS 추가 -->
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
 <script src="js/index.js"></script>
+<script>
+    const backgrounds = [
+        "./resource/bg1.png",
+        "./resource/bg2.png",
+        "./resource/bg3.png",
+        "./resource/bg4.png",
+        "./resource/bg5.png"
+    ];
+
+    function setRandomBackground() {
+        const randomIndex = Math.floor(Math.random() * backgrounds.length);
+        const selected = backgrounds[randomIndex];
+        document.getElementById("mainBody").style.backgroundImage = `url('${selected}')`;
+        document.getElementById("mainBody").style.backgroundSize = "cover";
+        document.getElementById("mainBody").style.backgroundPosition = "center";
+        //document.getElementById("mainBody").style.backgroundRepeat = "no-repeat";
+    }
+
+    // 페이지 로드 시 배경 변경
+    window.onload = setRandomBackground;
+</script>
 </body>
 <!-- ✅ 풋터 영역 -->
 <footer class="text-center mt-4 py-3 bg-dark text-white">

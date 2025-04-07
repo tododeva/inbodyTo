@@ -1,9 +1,5 @@
 /* 배경 이미지 설정 */
 body {
-  background-image: url('../resource/background.webp'); /* 배경 이미지 */
-  background-size: cover; /* 전체 화면 채우기 */
-  background-position: center;
-  background-repeat: repeat;
   height: 100vh;
   font-family: 'Apple SD Gothic Neo', sans-serif;
 }
@@ -39,4 +35,11 @@ body {
 .my-toast.show {
   opacity: 1;
   transform: translateX(0); /* 제자리로 슬라이드 인 */
+}
+
+.animated-button {
+  transition: transform 0.15s ease;
+}
+.animated-button:active {
+  transform: scale(1.15);
 }
