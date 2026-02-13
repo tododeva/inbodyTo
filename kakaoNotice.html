@@ -1,0 +1,289 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <title>카카오 공지사항</title>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+  <link href="css/style.css" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css">
+  <style>
+    .todo-content {
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      flex-grow: 1;
+    }
+  </style>
+</head>
+<body id="mainBody">
+
+
+  <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+    <div class="container-fluid">
+      <a class="navbar-brand" href="#">📂 메뉴</a>
+      <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarMenu"
+              aria-controls="navbarMenu" aria-expanded="false" aria-label="Toggle navigation">
+        <span class="navbar-toggler-icon"></span>
+      </button>
+
+      <div class="collapse navbar-collapse" id="navbarMenu">
+        <ul class="navbar-nav ms-auto mb-2 mb-lg-0">
+            <li class="nav-item">
+                <a class="nav-link" href="kakaoNotice.html">📌 카카오 공지사항</a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" href="notice.html">📋 공지사항</a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" href="index.html">📊 CSV 변환</a>
+            </li>
+        </ul>
+      </div>
+    </div>
+  </nav>
+
+
+  <div class="p-4 flex-fill" id="content-area">
+    <div class="container mt-5">
+      <div class="card bg-light p-4 shadow-sm">
+        <div class="d-flex justify-content-between align-items-center mb-3">
+          <h3>📌 kakao Notice edit</h3>
+          <button class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#todoModal">➕ 새 공지</button>
+        </div>
+
+        <input type="text" id="searchInput" class="form-control mb-3" placeholder="🔍 검색어 입력...">
+
+
+        <ul id="todoList" class="list-group"></ul>
+      </div>
+    </div>
+  </div>
+
+
+  <!-- 모달 -->
+  <div class="modal fade" id="todoModal" tabindex="-1" aria-labelledby="todoModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="todoModalLabel">📌 새 공지 추가</h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+        <div class="modal-body">
+          <textarea id="todoInput" class="form-control" placeholder="공지 내용을 입력하세요"></textarea>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">닫기</button>
+          <button type="submit" class="btn btn-primary" id="addTodoButton">추가</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- 🆕 수정용 모달 추가 -->
+  <div class="modal fade" id="editTodoModal" tabindex="-1" aria-labelledby="editTodoModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="editTodoModalLabel">✏ TODO 수정</h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+        <div class="modal-body">
+          <textarea id="editTodoInput" class="form-control"></textarea>
+          <input type="hidden" id="editTodoId">
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">취소</button>
+          <button type="submit" class="btn btn-success" id="saveEditButton">저장</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+
+  <div id="toast" class="my-toast">
+    <span id="toast-icon">✅</span>
+    <span id="toast-message">복사 완료!</span>
+  </div>
+
+
+  <!--<script src="js/notice.js"></script>-->
+
+
+
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+  <script>
+    let db;
+    let currentRenderedItems = []; // Store the currently displayed items
+    const request = indexedDB.open("kakaoTodoDB", 1);
+
+    request.onerror = () => console.error("DB 에러");
+    request.onsuccess = (event) => {
+      db = event.target.result;
+      loadTodos();
+    };
+    request.onupgradeneeded = (event) => {
+      db = event.target.result;
+      db.createObjectStore("todos", { keyPath: "id", autoIncrement: true });
+    };
+
+    // 📌 새 TODO 추가
+    document.getElementById("addTodoButton").addEventListener("click", function () {
+      const content = document.getElementById("todoInput").value;
+      if (!content) return;
+
+      const tx = db.transaction("todos", "readwrite");
+      const store = tx.objectStore("todos");
+      store.add({ content });
+
+      tx.oncomplete = () => {
+        document.getElementById("todoInput").value = "";
+        bootstrap.Modal.getInstance(document.getElementById("todoModal")).hide();
+        loadTodos();
+      };
+    });
+
+    // 🔍 검색 기능
+    document.getElementById("searchInput").addEventListener("input", function () {
+      loadTodos(this.value.toLowerCase());
+    });
+
+    // ✅ TODO 불러오기 및 렌더링
+    function loadTodos(searchKeyword = "") {
+      const tx = db.transaction("todos", "readonly");
+      const store = tx.objectStore("todos");
+      const request = store.getAll();
+
+      request.onsuccess = () => renderTodos(request.result, searchKeyword);
+    }
+
+    function renderTodos(items, searchKeyword) {
+      const list = document.getElementById("todoList");
+      list.innerHTML = "";
+
+      currentRenderedItems = items
+              .filter(item => item.content.toLowerCase().includes(searchKeyword));
+
+      currentRenderedItems.forEach((item, index) => {
+                const li = document.createElement("li");
+                li.className = "list-group-item d-flex justify-content-between align-items-center text-start";
+
+                li.innerHTML = `<div class="d-flex align-items-center" style="width: calc(100% - 100px);">
+                                  <button class="btn btn-sm bg-success-subtle me-2 animated-button" onclick="copyFromRendered(${index})">
+                                    <i class="bi bi-clipboard"></i>
+                                  </button>
+                                  <strong class="me-1">${index + 1}.</strong> 
+                                  <span class="todo-content">${item.content.replace(/\\n/g, ' ')}</span>
+                                </div>
+                                <div>
+                                  <button class="btn btn-sm btn-info me-1 animated-button" onclick="editFromRendered(${index})">
+                                    <i class="bi bi-pencil-square"></i>
+                                  </button>
+                                  <button class="btn btn-sm btn-danger animated-button" onclick="deleteTodo(${item.id})">
+                                    <i class="bi bi-trash3"></i>
+                                  </button>
+                                </div>`;
+                list.appendChild(li);
+              });
+    }
+
+    function copyFromRendered(index) {
+        const item = currentRenderedItems[index];
+        if (item) {
+            copyToClipboard(item.content);
+        }
+    }
+
+    function editFromRendered(index) {
+        const item = currentRenderedItems[index];
+        if (item) {
+            editTodo(item.id, item.content);
+        }
+    }
+
+    // 📋 클립보드 복사
+    function copyToClipboard(text) {
+      navigator.clipboard.writeText(text).then(() => {
+        //alert("클립보드에 복사되었습니다!");
+        showAlert({ message: "클립보드에 복사되었습니다! (Ctrl+V) 하세요!", type: "✅", color: "#16a606" });
+      });
+    }
+
+    // 🗑 삭제 기능
+    function deleteTodo(id) {
+      const tx = db.transaction("todos", "readwrite");
+      const store = tx.objectStore("todos");
+      store.delete(id);
+      tx.oncomplete = () => loadTodos(document.getElementById("searchInput").value.toLowerCase());
+    }
+
+    // ✏ 수정 기능
+    function editTodo(id, content) {
+      document.getElementById("editTodoId").value = id;
+      document.getElementById("editTodoInput").value = content;
+      new bootstrap.Modal(document.getElementById("editTodoModal")).show();
+    }
+
+    // 💾 수정 내용 저장
+    document.getElementById("saveEditButton").addEventListener("click", function () {
+      const id = Number(document.getElementById("editTodoId").value);
+      const updatedContent = document.getElementById("editTodoInput").value;
+      if (!updatedContent) return;
+
+      const tx = db.transaction("todos", "readwrite");
+      const store = tx.objectStore("todos");
+      store.get(id).onsuccess = (event) => {
+        const data = event.target.result;
+        data.content = updatedContent;
+        store.put(data);
+        tx.oncomplete = () => {
+          bootstrap.Modal.getInstance(document.getElementById("editTodoModal")).hide();
+          loadTodos(document.getElementById("searchInput").value.toLowerCase());
+        };
+      };
+    });
+
+
+    function showAlert({ message = "작업 완료", type = "success", color = "#4CAF50" }) {
+
+      const toast = document.getElementById("toast");
+      const icon = document.getElementById("toast-icon");
+      const text = document.getElementById("toast-message");
+      text.textContent = message;
+      toast.style.backgroundColor = color;
+      icon.textContent = type;
+
+
+      toast.classList.add("show");
+      //toast.className = `alert-${type} mt-3`; // success, danger 등 적용
+      // 3초 후 자동 숨김
+      setTimeout(() => {
+        toast.classList.remove("show");
+      }, 3000);
+    }
+
+
+    const backgrounds = [
+      "./resource/01.jpg",
+        "./resource/02.jpg",
+        "./resource/03.jpg",
+        "./resource/04.jpg",
+        "./resource/05.jpg",
+        "./resource/06.jpg",
+    ];
+
+    function setRandomBackground() {
+      const randomIndex = Math.floor(Math.random() * backgrounds.length);
+      const selected = backgrounds[randomIndex];
+      document.getElementById("mainBody").style.backgroundImage = `url('${selected}')`;
+      document.getElementById("mainBody").style.backgroundSize = "cover";
+      document.getElementById("mainBody").style.backgroundPosition = "center";
+      //document.getElementById("mainBody").style.backgroundRepeat = "no-repeat";
+    }
+
+    // 페이지 로드 시 배경 변경
+    window.onload = setRandomBackground;
+
+  </script>
+
+</body>
+</html>
